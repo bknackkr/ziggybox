@@ -24,7 +24,7 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     }
 
     if (operand_idx >= args.len) {
-        common_error.report("sleep", null, error.MissingOperand);
+        common_error.report("sleep", "missing operand", error.InvalidArgument);
         return common_error.EXIT_FAILURE;
     }
 
@@ -32,7 +32,7 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
 
     // Check for unexpected extra arguments (strictly following POSIX)
     if (operand_idx + 1 < args.len) {
-        common_error.report("sleep", null, error.ExtraOperand);
+        common_error.report("sleep", "extra operand", error.InvalidArgument);
         return common_error.EXIT_FAILURE;
     }
 
@@ -44,8 +44,13 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
         return common_error.EXIT_FAILURE;
     };
 
+    if (seconds > std.math.maxInt(i64)) {
+        common_error.report("sleep", time_str, error.InvalidArgument);
+        return common_error.EXIT_FAILURE;
+    }
+
     const io = std.Io.Threaded.global_single_threaded.io();
-    io.sleep(std.Io.Duration.fromSeconds(@intCast(seconds)), .monotonic) catch |err| {
+    io.sleep(std.Io.Duration.fromSeconds(@intCast(seconds)), .awake) catch |err| {
         common_error.report("sleep", null, err);
         return common_error.EXIT_FAILURE;
     };

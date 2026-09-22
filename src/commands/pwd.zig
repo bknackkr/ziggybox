@@ -112,9 +112,9 @@ fn isValidLogicalPath(path: []const u8) bool {
 }
 
 fn matchesCurrentDir(io: std.Io, logical: []const u8, physical: []const u8) bool {
-    _ = io;
     var buf: [std.Io.Dir.max_path_bytes]u8 = undefined;
-    const real_logical = std.Io.Dir.cwd().realpath(logical, &buf) catch return false;
+    const len = std.Io.Dir.cwd().realPathFile(io, logical, &buf) catch return false;
+    const real_logical = buf[0..len];
     return std.mem.eql(u8, real_logical, physical);
 }
 

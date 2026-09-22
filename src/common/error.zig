@@ -8,12 +8,6 @@ pub const EXIT_NOT_FOUND: u8 = 127;
 
 /// Prints: "<cmd>: <context>: <error description>\n" to stderr
 pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
-    const io = std.Io.Threaded.global_single_threaded.io();
-    const stderr_file = std.Io.File.stderr();
-    var buf: [256]u8 = undefined;
-    var fw = stderr_file.writerStreaming(io, &buf);
-    const stderr = &fw.interface;
-    
     // Translates Zig error set to POSIX strerror equivalent and outputs
     // cleanly without allocating heap memory.
     const err_str = switch (err) {
@@ -35,11 +29,10 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
     };
 
     if (context) |ctx| {
-        stderr.print("{s}: {s}: {s}\n", .{ cmd, ctx, err_str }) catch {};
+        std.debug.print("{s}: {s}: {s}\n", .{ cmd, ctx, err_str });
     } else {
-        stderr.print("{s}: {s}\n", .{ cmd, err_str }) catch {};
+        std.debug.print("{s}: {s}\n", .{ cmd, err_str });
     }
-    _ = fw.flush() catch {};
 }
 
 /// Maps an unexpected error to a standard exit status code.
@@ -52,3 +45,21 @@ pub fn toExitCode(err: anyerror) u8 {
         else => EXIT_FAILURE,
     };
 }
+
+// ============================================================================
+// Unit Tests
+// ============================================================================
+
+test "error: exit code mapping" {
+    try std.testing.expectEqual(EXIT_FAILURE, toExitCode(error.FileNotFound));
+    try std.testing.expectEqual(EXIT_FAILURE, toExitCode(error.AccessDenied));
+    try std.testing.expectEqual(EXIT_SYNTAX, toExitCode(error.InvalidArgument));
+    try std.testing.expectEqual(@as(u8, 141), toExitCode(error.BrokenPipe));
+    try std.testing.expectEqual(EXIT_FAILURE, toExitCode(error.Unexpected));
+}
+
+test "error: report execution" {
+    report("test_cmd", "test_context", error.FileNotFound);
+    report("test_cmd", null, error.AccessDenied);
+}
+

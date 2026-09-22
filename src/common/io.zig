@@ -24,7 +24,5 @@ pub fn pump(src: std.posix.fd_t, dst: std.posix.fd_t) !u64 {
 
 /// Standardized unbuffered write to stderr for warnings/errors.
 pub fn printError(comptime fmt: []const u8, args: anytype) void {
-    const stderr_file = std.fs.File{ .handle = std.posix.STDERR_FILENO };
-    const stderr = stderr_file.writer();
-    stderr.print(fmt, args) catch {};
+    std.debug.print(fmt, args);
 }

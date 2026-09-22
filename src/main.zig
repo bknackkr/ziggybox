@@ -19,6 +19,12 @@ pub const commands = struct {
     pub const @"true" = @import("commands/true.zig");
 };
 
+pub const common = struct {
+    pub const args = @import("common/args.zig");
+    pub const error_mod = @import("common/error.zig");
+    pub const io = @import("common/io.zig");
+};
+
 pub const Applet = struct {
     name: []const u8,
     run: *const fn (allocator: std.mem.Allocator, args: []const [:0]const u8) u8,
@@ -199,3 +205,8 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("nonexistent") == null);
 }
+
+test {
+    std.testing.refAllDecls(common);
+}
+
