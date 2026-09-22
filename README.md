@@ -57,3 +57,166 @@ zig build -Dtarget=arm-linux-musleabihf -Doptimize=ReleaseSmall
 
 ## AI transparency statement
 I believe it is important for any user of this program to be aware that a non-trivial amount of code in this repository was written by generative AI. It is also important to clarify that code, and only code, was generated this way. All statements, opinions, and images are my own and I am opposed to the use of generative AI for the purposes of image generation and creative/informative writing. Yes, I know I'm a hypocrite. Thank you for reading.
+
+## TODO List
+### POSIX Mandatory Commands
+| Command | Complete? |
+| --- | --- |
+| `alias` | [ ] |
+| `ar` | [ ] |
+| `at` | [ ] |
+| `awk` | [ ] |
+| `basename` | [✅] |
+| `batch` | [ ] |
+| `bc` | [ ] |
+| `cat` | [ ] |
+| `cd` | [ ] |
+| `chgrp` | [ ] |
+| `chmod` | [ ] |
+| `chown` | [ ] |
+| `cksum` | [ ] |
+| `cmp` | [ ] |
+| `comm` | [ ] |
+| `command` | [ ] |
+| `cp` | [ ] |
+| `cron` | [ ] |
+| `csplit` | [ ] |
+| `cut` | [ ] |
+| `date` | [ ] |
+| `dd` | [ ] |
+| `df` | [ ] |
+| `diff` | [ ] |
+| `dirname` | [✅] |
+| `du` | [ ] |
+| `echo` | [✅] |
+| `ed` | [ ] |
+| `env` | [ ] |
+| `expand` | [ ] |
+| `expr` | [ ] |
+| `false` | [✅] |
+| `file` | [ ] |
+| `find` | [ ] |
+| `fold` | [ ] |
+| `gencat` | [ ] |
+| `getconf` | [ ] |
+| `getopts` | [ ] |
+| `gettext` | [ ] |
+| `grep` | [ ] |
+| `hash` | [ ] |
+| `head` | [ ] |
+| `iconv` | [ ] |
+| `id` | [ ] |
+| `join` | [ ] |
+| `kill` | [ ] |
+| `ln` | [ ] |
+| `locale` | [ ] |
+| `localedef` | [ ] |
+| `logger` | [ ] |
+| `logname` | [ ] |
+| `lp` | [ ] |
+| `ls` | [ ] |
+| `m4` | [ ] |
+| `mailx` | [ ] |
+| `man` | [ ] |
+| `mesg` | [ ] |
+| `mkdir` | [ ] |
+| `mkfifo` | [ ] |
+| `msgfmt` | [ ] |
+| `mv` | [ ] |
+| `newgrp` | [ ] |
+| `ngettext` | [ ] |
+| `nice` | [ ] |
+| `nohup` | [ ] |
+| `od` | [ ] |
+| `paste` | [ ] |
+| `patch` | [ ] |
+| `pathchk` | [ ] |
+| `pax` | [ ] |
+| `pr` | [ ] |
+| `printf` | [ ] |
+| `ps` | [ ] |
+| `pwd` | [✅] |
+| `read` | [ ] |
+| `readlink` | [ ] |
+| `realpath` | [ ] |
+| `renice` | [ ] |
+| `rm` | [ ] |
+| `rmdir` | [ ] |
+| `sed` | [ ] |
+| `sh` | [ ] |
+| `sleep` | [✅] |
+| `sort` | [ ] |
+| `split` | [ ] |
+| `strings` | [ ] |
+| `stty` | [ ] |
+| `tabs` | [ ] |
+| `tail` | [ ] |
+| `tee` | [ ] |
+| `test` | [ ] |
+| `time` | [ ] |
+| `timeout` | [ ] |
+| `touch` | [ ] |
+| `tput` | [ ] |
+| `tr` | [ ] |
+| `true` | [✅] |
+| `tsort` | [ ] |
+| `tty` | [ ] |
+| `umask` | [ ] |
+| `unalias` | [ ] |
+| `uname` | [✅] |
+| `unexpand` | [ ] |
+| `uniq` | [ ] |
+| `uudecode` | [ ] |
+| `uuencode` | [ ] |
+| `wait` | [ ] |
+| `wc` | [ ] |
+| `write` | [ ] |
+| `xargs` | [ ] |
+### Linux Utilities
+| Command | Status |
+| --- | --- |
+| `base64` | [ ] |
+| `chroot` | [ ] |
+| `clear` | [ ] |
+| `dmesg` | [ ] |
+| `free` | [ ] |
+| `gunzip` | [ ] |
+| `gzip` | [ ] |
+| `halt` | [ ] |
+| `hexdump` | [ ] |
+| `hostname` | [ ] |
+| `install` | [ ] |
+| `losetup` | [ ] |
+| `lsblk` | [ ] |
+| `md5sum` | [ ] |
+| `mktemp` | [ ] |
+| `mount` | [ ] |
+| `nc` | [ ] |
+| `nproc` | [ ] |
+| `pgrep` | [ ] |
+| `pidof` | [ ] |
+| `ping` | [ ] |
+| `pivot_root` | [ ] |
+| `pkill` | [ ] |
+| `poweroff` | [ ] |
+| `reboot` | [ ] |
+| `sha1sum` | [ ] |
+| `sha256sum` | [ ] |
+| `sha512sum` | [ ] |
+| `stat` | [ ] |
+| `swapoff` | [ ] |
+| `swapon` | [ ] |
+| `switch_root` | [ ] |
+| `sync` | [ ] |
+| `tac` | [ ] |
+| `tar` | [ ] |
+| `truncate` | [ ] |
+| `umount` | [ ] |
+| `uptime` | [ ] |
+| `watch` | [ ] |
+| `wget` | [ ] |
+| `which` | [ ] |
+| `whoami` | [ ] |
+| `xxd` | [ ] |
+| `yes` | [ ] |
+| `zcat` | [ ] |
