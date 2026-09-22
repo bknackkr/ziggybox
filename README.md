@@ -18,7 +18,7 @@ dual licensed as above, without any additional terms or conditions.
 
 ## Building
 
-ziggybox is written in Zig 0.16.0.
+ziggybox is written in Zig 0.16.0. To build, you need to install it. See [Zig: Getting Started](https://ziglang.org/learn/getting-started/#direct)
 
 ### x86-64 and x86 (32-bit)
 
