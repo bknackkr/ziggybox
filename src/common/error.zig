@@ -35,6 +35,9 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
         error.OperationUnsupported => "Operation not supported",
         error.DiskQuota => "Disk quota exceeded",
         error.HardwareFailure => "Input/output error",
+        error.BadPathName => "Invalid argument",
+        error.NetworkNotFound => "No such host or network path",
+        error.FileSystem => "File system error",
         else => @errorName(err),
     };
 

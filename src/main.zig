@@ -11,14 +11,17 @@ const std = @import("std");
 
 pub const commands = struct {
     pub const basename = @import("commands/basename.zig");
+    pub const cp = @import("commands/cp.zig");
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
     pub const false_cmd = @import("commands/false.zig");
     pub const ln = @import("commands/ln.zig");
     pub const logname = @import("commands/logname.zig");
     pub const mkdir = @import("commands/mkdir.zig");
+    pub const mv = @import("commands/mv.zig");
     pub const pwd = @import("commands/pwd.zig");
     pub const readlink = @import("commands/readlink.zig");
+    pub const rm = @import("commands/rm.zig");
     pub const rmdir = @import("commands/rmdir.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
@@ -43,6 +46,11 @@ pub const applets = [_]Applet{
         .name = "basename",
         .run = commands.basename.run,
         .description = "return non-directory portion of a pathname",
+    },
+    .{
+        .name = "cp",
+        .run = commands.cp.run,
+        .description = "copy files",
     },
     .{
         .name = "dirname",
@@ -75,6 +83,11 @@ pub const applets = [_]Applet{
         .description = "make directories",
     },
     .{
+        .name = "mv",
+        .run = commands.mv.run,
+        .description = "move files",
+    },
+    .{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
@@ -83,6 +96,11 @@ pub const applets = [_]Applet{
         .name = "readlink",
         .run = commands.readlink.run,
         .description = "display the contents of a symbolic link",
+    },
+    .{
+        .name = "rm",
+        .run = commands.rm.run,
+        .description = "remove directory entries",
     },
     .{
         .name = "rmdir",
@@ -233,14 +251,17 @@ test "getBaseName extraction" {
 
 test "findApplet lookup" {
     try std.testing.expect(findApplet("basename") != null);
+    try std.testing.expect(findApplet("cp") != null);
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
     try std.testing.expect(findApplet("ln") != null);
     try std.testing.expect(findApplet("logname") != null);
     try std.testing.expect(findApplet("mkdir") != null);
+    try std.testing.expect(findApplet("mv") != null);
     try std.testing.expect(findApplet("pwd") != null);
     try std.testing.expect(findApplet("readlink") != null);
+    try std.testing.expect(findApplet("rm") != null);
     try std.testing.expect(findApplet("rmdir") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);
@@ -250,5 +271,6 @@ test "findApplet lookup" {
 
 test {
     std.testing.refAllDecls(common);
+    std.testing.refAllDecls(commands);
 }
 

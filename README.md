@@ -78,7 +78,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `cmp` | [ ] |
 | `comm` | [ ] |
 | `command` | [ ] |
-| `cp` | [ ] |
+| `cp` | [✅] |
 | `cron` | [ ] |
 | `csplit` | [ ] |
 | `cut` | [ ] |
@@ -122,7 +122,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `mkdir` | [✅] |
 | `mkfifo` | [ ] |
 | `msgfmt` | [ ] |
-| `mv` | [ ] |
+| `mv` | [✅] |
 | `newgrp` | [ ] |
 | `ngettext` | [ ] |
 | `nice` | [ ] |
@@ -140,7 +140,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `readlink` | [✅] |
 | `realpath` | [ ] |
 | `renice` | [ ] |
-| `rm` | [ ] |
+| `rm` | [✅] |
 | `rmdir` | [✅] |
 | `sed` | [ ] |
 | `sh` | [ ] |
