@@ -17,6 +17,7 @@ pub const commands = struct {
     pub const pwd = @import("commands/pwd.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
+    pub const uname = @import("commands/uname.zig");
 };
 
 pub const common = struct {
@@ -67,6 +68,11 @@ pub const applets = [_]Applet{
         .name = "true",
         .run = commands.@"true".run,
         .description = "return true value",
+    },
+    .{
+        .name = "uname",
+        .run = commands.uname.run,
+        .description = "return system name",
     },
 };
 
@@ -203,6 +209,7 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("pwd") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);
+    try std.testing.expect(findApplet("uname") != null);
     try std.testing.expect(findApplet("nonexistent") == null);
 }
 
