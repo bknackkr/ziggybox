@@ -39,9 +39,6 @@ To compile for 64-bit and 32-bit x86 targets:
 # x86-64 (Linux MUSL)
 zig build -Dtarget=x86_64-linux-musl -Doptimize=ReleaseSmall
 
-# x86-64 (Windows)
-zig build -Dtarget=x86_64-windows -Doptimize=ReleaseSmall
-
 # x86 (32-bit Linux MUSL)
 zig build -Dtarget=x86-linux-musl -Doptimize=ReleaseSmall
 ```
