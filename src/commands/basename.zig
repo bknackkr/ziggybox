@@ -18,6 +18,8 @@
 //! - Zero dynamic allocations. Operates on slices and uses fixed-size stack buffers.
 
 const std = @import("std");
+const common_args = @import("../common/args.zig");
+const common_error = @import("../common/error.zig");
 
 const builtin_is_windows = @import("builtin").os.tag == .windows;
 
@@ -83,40 +85,28 @@ pub fn posixBasename(path: []const u8, suffix: ?[]const u8) []const u8 {
     return res;
 }
 
-fn printError(io: std.Io, comptime msg: []const u8) void {
-    const stderr_file = std.Io.File.stderr();
-    var err_buf: [256]u8 = undefined;
-    var err_fw = stderr_file.writerStreaming(io, &err_buf);
-    const err_writer = &err_fw.interface;
-    _ = err_writer.writeAll("basename: " ++ msg) catch {};
-    _ = err_fw.flush() catch {};
-}
-
-/// Entry point matching the ziggybox command interface standard:
-/// `pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8`
 pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     _ = allocator;
     const io = std.Io.Threaded.global_single_threaded.io();
 
-    var operands_start: usize = 0;
-    if (args.len > 0) {
-        const first_arg = args[0];
-        if (std.mem.eql(u8, first_arg, "--")) {
-            operands_start = 1;
-        } else if (first_arg.len > 1 and first_arg[0] == '-') {
-            printError(io, "unknown option\n");
-            return 1;
+    var parser = common_args.ArgParser.init(args);
+    while (parser.next("")) |opt| {
+        switch (opt) {
+            else => {
+                common_error.report("basename", "invalid option", error.InvalidArgument);
+                return common_error.EXIT_SYNTAX;
+            },
         }
     }
 
-    const operands = args[operands_start..];
+    const operands = parser.remaining();
     if (operands.len == 0) {
-        printError(io, "missing operand\n");
-        return 1;
+        common_error.report("basename", "missing operand", error.InvalidArgument);
+        return common_error.EXIT_SYNTAX;
     }
     if (operands.len > 2) {
-        printError(io, "extra operand\n");
-        return 1;
+        common_error.report("basename", "extra operand", error.InvalidArgument);
+        return common_error.EXIT_SYNTAX;
     }
 
     const path = operands[0];
@@ -128,26 +118,26 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     var fw = stdout_file.writerStreaming(io, &buf);
     const writer = &fw.interface;
 
-    writer.writeAll(base) catch {
-        printError(io, "write error\n");
-        return 1;
+    writer.writeAll(base) catch |err| {
+        common_error.report("basename", null, err);
+        return common_error.toExitCode(err);
     };
-    writer.writeByte('\n') catch {
-        printError(io, "write error\n");
-        return 1;
+    writer.writeByte('\n') catch |err| {
+        common_error.report("basename", null, err);
+        return common_error.toExitCode(err);
     };
-    fw.flush() catch {
-        printError(io, "write error\n");
-        return 1;
+    fw.flush() catch |err| {
+        common_error.report("basename", null, err);
+        return common_error.toExitCode(err);
     };
 
-    return 0;
+    return common_error.EXIT_SUCCESS;
 }
 
 pub fn main(init: std.process.Init) u8 {
-    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch {
-        printError(init.io, "out of memory\n");
-        return 1;
+    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch |err| {
+        common_error.report("basename", null, err);
+        return common_error.EXIT_FAILURE;
     };
     const cmd_args = if (all_args.len > 1) all_args[1..] else &.{};
     return run(init.arena.allocator(), cmd_args);
@@ -194,11 +184,11 @@ test "basename: run execution" {
     try std.testing.expectEqual(@as(u8, 0), code4);
 
     const code5 = run(std.testing.allocator, &.{});
-    try std.testing.expectEqual(@as(u8, 1), code5);
+    try std.testing.expectEqual(@as(u8, 2), code5);
 
     const code6 = run(std.testing.allocator, &.{ "-invalid" });
-    try std.testing.expectEqual(@as(u8, 1), code6);
+    try std.testing.expectEqual(@as(u8, 2), code6);
 
     const code7 = run(std.testing.allocator, &.{ "a", "b", "c" });
-    try std.testing.expectEqual(@as(u8, 1), code7);
+    try std.testing.expectEqual(@as(u8, 2), code7);
 }

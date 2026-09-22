@@ -16,93 +16,41 @@
 //!   - EXIT STATUS: 0 on success, >0 on error.
 
 const std = @import("std");
+const common_args = @import("../common/args.zig");
+const common_error = @import("../common/error.zig");
 
 const Mode = enum {
     logical,
     physical,
 };
 
-/// Print diagnostic error message to stderr in POSIX standard format:
-/// `pwd: <error message>\n`
-fn printError(io: std.Io, comptime msg: []const u8) void {
-    const stderr_file = std.Io.File.stderr();
-    var err_buf: [256]u8 = undefined;
-    var err_fw = stderr_file.writerStreaming(io, &err_buf);
-    const err_writer = &err_fw.interface;
-    _ = err_writer.writeAll("pwd: " ++ msg) catch {};
-    _ = err_fw.flush() catch {};
-}
-
-/// Check if a logical PWD string is a valid absolute pathname with no '.' or '..' components.
-fn isValidLogicalPath(path: []const u8) bool {
-    if (path.len == 0) return false;
-    if (!std.fs.path.isAbsolute(path)) return false;
-
-    var it = std.mem.tokenizeAny(u8, path, "/\\");
-    while (it.next()) |comp| {
-        if (std.mem.eql(u8, comp, ".") or std.mem.eql(u8, comp, "..")) {
-            return false;
-        }
-    }
-    return true;
-}
-
-/// Check if a logical path actually matches the current working directory.
-fn matchesCurrentDir(io: std.Io, logical_path: []const u8, phys_path: []const u8) bool {
-    if (std.mem.eql(u8, logical_path, phys_path)) return true;
-    if (@import("builtin").os.tag == .windows and std.ascii.eqlIgnoreCase(logical_path, phys_path)) return true;
-
-    // Verify whether both paths refer to the same directory via directory stat
-    var log_dir = std.Io.Dir.openDirAbsolute(io, logical_path, .{}) catch return false;
-    defer log_dir.close(io);
-    const log_stat = log_dir.stat(io) catch return false;
-
-    var phys_dir = std.Io.Dir.openDirAbsolute(io, phys_path, .{}) catch return false;
-    defer phys_dir.close(io);
-    const phys_stat = phys_dir.stat(io) catch return false;
-
-    return log_stat.inode == phys_stat.inode;
-}
-
-/// Entry point matching the ziggybox command interface standard:
-/// `pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8`
 pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     const io = std.Io.Threaded.global_single_threaded.io();
     var mode: Mode = .logical;
 
-    var arg_idx: usize = 0;
-    while (arg_idx < args.len) : (arg_idx += 1) {
-        const arg = args[arg_idx];
-        if (std.mem.eql(u8, arg, "--")) {
-            arg_idx += 1;
-            break;
-        }
-        if (arg.len > 1 and arg[0] == '-') {
-            for (arg[1..]) |flag| {
-                switch (flag) {
-                    'L' => mode = .logical,
-                    'P' => mode = .physical,
-                    else => {
-                        printError(io, "invalid option\n");
-                        return 1;
-                    },
-                }
+    var parser = common_args.ArgParser.init(args);
+    while (parser.next("LP")) |opt| {
+        switch (opt) {
+            'L' => mode = .logical,
+            'P' => mode = .physical,
+            else => {
+                common_error.report("pwd", "invalid option", error.InvalidArgument);
+                return common_error.EXIT_SYNTAX;
             }
-        } else {
-            break;
         }
     }
 
-    if (arg_idx < args.len) {
-        printError(io, "too many arguments\n");
-        return 1;
+    const operands = parser.remaining();
+    if (operands.len > 0) {
+        common_error.report("pwd", "too many arguments", error.InvalidArgument);
+        return common_error.EXIT_SYNTAX;
     }
 
     // Retrieve physical current working directory
     var phys_buf: [std.fs.max_path_bytes]u8 = undefined;
-    const phys_len = std.process.currentPath(io, &phys_buf) catch {
-        printError(io, "cannot determine current directory\n");
-        return 1;
+    const phys_len = std.process.currentPath(io, &phys_buf) catch |err| {
+        common_error.report("pwd", "cannot determine current directory", err);
+        return common_error.toExitCode(err);
     };
     const phys_path = phys_buf[0..phys_len];
 
@@ -126,29 +74,48 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     var fw = stdout_file.writerStreaming(io, &out_buf);
     const writer = &fw.interface;
 
-    writer.writeAll(out_path) catch {
-        printError(io, "write error\n");
-        return 1;
+    writer.writeAll(out_path) catch |err| {
+        common_error.report("pwd", null, err);
+        return common_error.toExitCode(err);
     };
-    writer.writeByte('\n') catch {
-        printError(io, "write error\n");
-        return 1;
+    writer.writeByte('\n') catch |err| {
+        common_error.report("pwd", null, err);
+        return common_error.toExitCode(err);
     };
-    fw.flush() catch {
-        printError(io, "write error\n");
-        return 1;
+    fw.flush() catch |err| {
+        common_error.report("pwd", null, err);
+        return common_error.toExitCode(err);
     };
 
-    return 0;
+    return common_error.EXIT_SUCCESS;
 }
 
 pub fn main(init: std.process.Init) u8 {
-    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch {
-        printError(init.io, "out of memory\n");
-        return 1;
+    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch |err| {
+        common_error.report("pwd", null, err);
+        return common_error.EXIT_FAILURE;
     };
     const cmd_args = if (all_args.len > 1) all_args[1..] else &.{};
     return run(init.arena.allocator(), cmd_args);
+}
+
+
+fn isValidLogicalPath(path: []const u8) bool {
+    if (path.len == 0 or path[0] != '/') return false;
+    var it = std.mem.splitScalar(u8, path, '/');
+    while (it.next()) |component| {
+        if (std.mem.eql(u8, component, ".") or std.mem.eql(u8, component, "..")) {
+            return false;
+        }
+    }
+    return true;
+}
+
+fn matchesCurrentDir(io: std.Io, logical: []const u8, physical: []const u8) bool {
+    _ = io;
+    var buf: [std.fs.max_path_bytes]u8 = undefined;
+    const real_logical = std.fs.cwd().realpath(logical, &buf) catch return false;
+    return std.mem.eql(u8, real_logical, physical);
 }
 
 // ============================================================================
@@ -182,10 +149,10 @@ test "pwd: combined flags -LP" {
 
 test "pwd: extra arguments rejected" {
     const code = run(std.testing.allocator, &.{"extra"});
-    try std.testing.expectEqual(@as(u8, 1), code);
+    try std.testing.expectEqual(@as(u8, 2), code);
 }
 
 test "pwd: invalid option rejected" {
     const code = run(std.testing.allocator, &.{"-z"});
-    try std.testing.expectEqual(@as(u8, 1), code);
+    try std.testing.expectEqual(@as(u8, 2), code);
 }

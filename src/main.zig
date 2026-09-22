@@ -128,12 +128,8 @@ pub fn main(init: std.process.Init) u8 {
     const io = init.io;
     const allocator = init.arena.allocator();
 
-    const all_args = init.minimal.args.toSlice(allocator) catch {
-        const stderr = std.Io.File.stderr();
-        var buf: [128]u8 = undefined;
-        var fw = stderr.writerStreaming(io, &buf);
-        _ = fw.interface.writeAll("ziggybox: out of memory\n") catch {};
-        _ = fw.flush() catch {};
+    const all_args = init.minimal.args.toSlice(allocator) catch |err| {
+        @import("common/error.zig").report("ziggybox", null, err);
         return 1;
     };
 

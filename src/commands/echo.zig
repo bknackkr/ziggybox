@@ -34,6 +34,7 @@
 //! - Zero dynamic allocations. Uses fixed-size stack buffers for I/O.
 
 const std = @import("std");
+const common_error = @import("../common/error.zig");
 
 /// Core echo writing logic decoupled from the underlying I/O destination for testability.
 /// Returns `true` if trailing newline should be output, or `false` if `\c` suppressed it.
@@ -105,19 +106,6 @@ fn writeEcho(writer: *std.Io.Writer, args: []const [:0]const u8) !bool {
     return true;
 }
 
-/// Print diagnostic error message to stderr in POSIX standard format:
-/// `<command>: <error message>\n`
-fn printError(io: std.Io, comptime msg: []const u8) void {
-    const stderr_file = std.Io.File.stderr();
-    var err_buf: [256]u8 = undefined;
-    var err_fw = stderr_file.writerStreaming(io, &err_buf);
-    const err_writer = &err_fw.interface;
-    _ = err_writer.writeAll("echo: " ++ msg) catch {};
-    _ = err_fw.flush() catch {};
-}
-
-/// Entry point matching the ziggybox command interface specification:
-/// `pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8`
 pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     // Zero dynamic allocations for echo.
     _ = allocator;
@@ -130,32 +118,31 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     var fw = stdout_file.writerStreaming(io, &buf);
     const writer = &fw.interface;
 
-    const should_print_newline = writeEcho(writer, args) catch {
-        printError(io, "write error\n");
-        return 1;
+    const should_print_newline = writeEcho(writer, args) catch |err| {
+        common_error.report("echo", null, err);
+        return common_error.toExitCode(err);
     };
 
     if (should_print_newline) {
-        writer.writeByte('\n') catch {
-            printError(io, "write error\n");
-            return 1;
+        writer.writeByte('\n') catch |err| {
+            common_error.report("echo", null, err);
+            return common_error.toExitCode(err);
         };
     }
 
-    fw.flush() catch {
-        printError(io, "write error\n");
-        return 1;
+    fw.flush() catch |err| {
+        common_error.report("echo", null, err);
+        return common_error.toExitCode(err);
     };
 
-    return 0;
+    return common_error.EXIT_SUCCESS;
 }
 
 /// Direct standalone execution support (e.g. `zig run src/commands/echo.zig -- ...`)
 pub fn main(init: std.process.Init) u8 {
-    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch {
-        const io = init.io;
-        printError(io, "out of memory\n");
-        return 1;
+    const all_args = init.minimal.args.toSlice(init.arena.allocator()) catch |err| {
+        common_error.report("echo", null, err);
+        return common_error.EXIT_FAILURE;
     };
     const cmd_args = if (all_args.len > 1) all_args[1..] else &.{};
     return run(init.arena.allocator(), cmd_args);

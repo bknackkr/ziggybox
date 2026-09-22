@@ -7,15 +7,16 @@
 //!   - EXIT STATUS: 0
 
 const std = @import("std");
+const common_error = @import("../common/error.zig");
 
 /// Entry point matching the ziggybox command interface standard:
 /// `pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8`
 pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     _ = allocator;
     _ = args;
-    return 0;
+    return common_error.EXIT_SUCCESS;
 }
 
 pub fn main() u8 {
-    return 0;
+    return common_error.EXIT_SUCCESS;
 }
