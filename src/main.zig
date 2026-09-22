@@ -15,6 +15,7 @@ pub const commands = struct {
     pub const echo = @import("commands/echo.zig");
     pub const @"false" = @import("commands/false.zig");
     pub const pwd = @import("commands/pwd.zig");
+    pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
 };
 
@@ -50,6 +51,11 @@ pub const applets = [_]Applet{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
+    },
+    .{
+        .name = "sleep",
+        .run = commands.sleep.run,
+        .description = "suspend execution for an interval",
     },
     .{
         .name = "true",
@@ -189,6 +195,7 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
     try std.testing.expect(findApplet("pwd") != null);
+    try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("nonexistent") == null);
 }
