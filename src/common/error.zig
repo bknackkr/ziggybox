@@ -25,6 +25,10 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
         error.SymLinkLoop => "Too many levels of symbolic links",
         error.NotOpenForReading => "Bad file descriptor",
         error.NotOpenForWriting => "Bad file descriptor",
+        error.DirNotEmpty => "Directory not empty",
+        error.ReadOnlyFileSystem => "Read-only file system",
+        error.FileBusy => "Device or resource busy",
+        error.PermissionDenied => "Permission denied",
         else => @errorName(err),
     };
 

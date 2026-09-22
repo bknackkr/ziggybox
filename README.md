@@ -119,7 +119,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `mailx` | [ ] |
 | `man` | [ ] |
 | `mesg` | [ ] |
-| `mkdir` | [ ] |
+| `mkdir` | [✅] |
 | `mkfifo` | [ ] |
 | `msgfmt` | [ ] |
 | `mv` | [ ] |
@@ -141,7 +141,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `realpath` | [ ] |
 | `renice` | [ ] |
 | `rm` | [ ] |
-| `rmdir` | [ ] |
+| `rmdir` | [✅] |
 | `sed` | [ ] |
 | `sh` | [ ] |
 | `sleep` | [✅] |

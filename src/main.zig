@@ -15,7 +15,9 @@ pub const commands = struct {
     pub const echo = @import("commands/echo.zig");
     pub const false_cmd = @import("commands/false.zig");
     pub const logname = @import("commands/logname.zig");
+    pub const mkdir = @import("commands/mkdir.zig");
     pub const pwd = @import("commands/pwd.zig");
+    pub const rmdir = @import("commands/rmdir.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
     pub const uname = @import("commands/uname.zig");
@@ -61,9 +63,19 @@ pub const applets = [_]Applet{
         .description = "return the user's login name",
     },
     .{
+        .name = "mkdir",
+        .run = commands.mkdir.run,
+        .description = "make directories",
+    },
+    .{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
+    },
+    .{
+        .name = "rmdir",
+        .run = commands.rmdir.run,
+        .description = "remove directories",
     },
     .{
         .name = "sleep",
@@ -213,7 +225,9 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
     try std.testing.expect(findApplet("logname") != null);
+    try std.testing.expect(findApplet("mkdir") != null);
     try std.testing.expect(findApplet("pwd") != null);
+    try std.testing.expect(findApplet("rmdir") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("uname") != null);
