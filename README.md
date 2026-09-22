@@ -18,7 +18,7 @@ dual licensed as above, without any additional terms or conditions.
 
 ## Building
 
-ziggybox is written in Zig 0.16.0. To build, you need to install it. You can download it from [Zig: Getting Started](https://ziglang.org/learn/getting-started/#direct) or install it via your system's package manager:
+ziggybox is written in Zig 0.16.0. To build, you need to install it. You can download it from https://ziglang.org/download/ or install it via your system's package manager:
 
 ```bash
 # Arch Linux
