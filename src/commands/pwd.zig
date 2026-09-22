@@ -47,7 +47,7 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
     }
 
     // Retrieve physical current working directory
-    var phys_buf: [std.fs.max_path_bytes]u8 = undefined;
+    var phys_buf: [std.Io.Dir.max_path_bytes]u8 = undefined;
     const phys_len = std.process.currentPath(io, &phys_buf) catch |err| {
         common_error.report("pwd", "cannot determine current directory", err);
         return common_error.toExitCode(err);
@@ -113,8 +113,8 @@ fn isValidLogicalPath(path: []const u8) bool {
 
 fn matchesCurrentDir(io: std.Io, logical: []const u8, physical: []const u8) bool {
     _ = io;
-    var buf: [std.fs.max_path_bytes]u8 = undefined;
-    const real_logical = std.fs.cwd().realpath(logical, &buf) catch return false;
+    var buf: [std.Io.Dir.max_path_bytes]u8 = undefined;
+    const real_logical = std.Io.Dir.cwd().realpath(logical, &buf) catch return false;
     return std.mem.eql(u8, real_logical, physical);
 }
 

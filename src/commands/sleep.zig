@@ -44,7 +44,11 @@ pub fn run(allocator: std.mem.Allocator, args: []const [:0]const u8) u8 {
         return common_error.EXIT_FAILURE;
     };
 
-    std.time.sleep(seconds * std.time.ns_per_s);
+    const io = std.Io.Threaded.global_single_threaded.io();
+    io.sleep(std.Io.Duration.fromSeconds(@intCast(seconds)), .monotonic) catch |err| {
+        common_error.report("sleep", null, err);
+        return common_error.EXIT_FAILURE;
+    };
 
     return common_error.EXIT_SUCCESS;
 }

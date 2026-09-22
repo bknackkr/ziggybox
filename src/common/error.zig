@@ -8,8 +8,11 @@ pub const EXIT_NOT_FOUND: u8 = 127;
 
 /// Prints: "<cmd>: <context>: <error description>\n" to stderr
 pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
-    const stderr_file = std.fs.File{ .handle = std.posix.STDERR_FILENO };
-    const stderr = stderr_file.writer();
+    const io = std.Io.Threaded.global_single_threaded.io();
+    const stderr_file = std.Io.File.stderr();
+    var buf: [256]u8 = undefined;
+    var fw = stderr_file.writerStreaming(io, &buf);
+    const stderr = &fw.interface;
     
     // Translates Zig error set to POSIX strerror equivalent and outputs
     // cleanly without allocating heap memory.
@@ -36,6 +39,7 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
     } else {
         stderr.print("{s}: {s}\n", .{ cmd, err_str }) catch {};
     }
+    _ = fw.flush() catch {};
 }
 
 /// Maps an unexpected error to a standard exit status code.
