@@ -57,3 +57,6 @@ zig build -Dtarget=aarch64-linux-musl -Doptimize=ReleaseSmall
 # AArch32 / ARMv7 (Linux MUSL with hardware float)
 zig build -Dtarget=arm-linux-musleabihf -Doptimize=ReleaseSmall
 ```
+
+## AI transparency statement
+I believe it is important for any user of this program to be aware that a non-trivial amount of code in this repository was written by generative AI. It is also important to clarify that code, and only code, was generated this way. All statements, opinions, and images are my own and I am opposed to the use of generative AI for the purposes of image generation and creative/informative writing. Yes, I know I'm a hypocrite. Thank you for reading.
