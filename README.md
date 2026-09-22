@@ -15,3 +15,34 @@ at your option.
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
 dual licensed as above, without any additional terms or conditions.
+
+## Building
+
+ziggybox is written in Zig 0.16.0.
+
+### x86-64 and x86 (32-bit)
+
+To compile for 64-bit and 32-bit x86 targets:
+
+```bash
+# x86-64 (Linux MUSL)
+zig build -Dtarget=x86_64-linux-musl -Doptimize=ReleaseSmall
+
+# x86-64 (Windows)
+zig build -Dtarget=x86_64-windows -Doptimize=ReleaseSmall
+
+# x86 (32-bit Linux MUSL)
+zig build -Dtarget=x86-linux-musl -Doptimize=ReleaseSmall
+```
+
+### AArch64 and ARM (32-bit)
+
+To compile for 64-bit and 32-bit ARM architectures:
+
+```bash
+# AArch64 (Linux MUSL)
+zig build -Dtarget=aarch64-linux-musl -Doptimize=ReleaseSmall
+
+# AArch32 / ARMv7 (Linux MUSL with hardware float)
+zig build -Dtarget=arm-linux-musleabihf -Doptimize=ReleaseSmall
+```
