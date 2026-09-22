@@ -1,4 +1,4 @@
-# ziggybox
+# <img src="img\ziggybox_1024px.png" height="32" align="center" alt="ziggybox Logo">ziggybox
 A Zig reimplementation of POSIX shell commands, inspired by Busy/Toybox
 
 ## License
