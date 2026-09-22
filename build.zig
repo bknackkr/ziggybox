@@ -44,7 +44,37 @@ pub fn build(b: *std.Build) void {
     });
     const run_echo_tests = b.addRunArtifact(echo_tests);
 
+    const pwd_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/commands/pwd.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+    const run_pwd_tests = b.addRunArtifact(pwd_tests);
+
+    const basename_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/commands/basename.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+    const run_basename_tests = b.addRunArtifact(basename_tests);
+
+    const dirname_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/commands/dirname.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+    const run_dirname_tests = b.addRunArtifact(dirname_tests);
+
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_main_tests.step);
     test_step.dependOn(&run_echo_tests.step);
+    test_step.dependOn(&run_pwd_tests.step);
+    test_step.dependOn(&run_basename_tests.step);
+    test_step.dependOn(&run_dirname_tests.step);
 }

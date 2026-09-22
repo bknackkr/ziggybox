@@ -10,8 +10,11 @@
 const std = @import("std");
 
 pub const commands = struct {
+    pub const basename = @import("commands/basename.zig");
+    pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
     pub const @"false" = @import("commands/false.zig");
+    pub const pwd = @import("commands/pwd.zig");
     pub const @"true" = @import("commands/true.zig");
 };
 
@@ -24,6 +27,16 @@ pub const Applet = struct {
 /// Registry of all currently implemented applets in ziggybox.
 pub const applets = [_]Applet{
     .{
+        .name = "basename",
+        .run = commands.basename.run,
+        .description = "return non-directory portion of a pathname",
+    },
+    .{
+        .name = "dirname",
+        .run = commands.dirname.run,
+        .description = "return directory portion of a pathname",
+    },
+    .{
         .name = "echo",
         .run = commands.echo.run,
         .description = "write arguments to standard output",
@@ -32,6 +45,11 @@ pub const applets = [_]Applet{
         .name = "false",
         .run = commands.@"false".run,
         .description = "return false value",
+    },
+    .{
+        .name = "pwd",
+        .run = commands.pwd.run,
+        .description = "return working directory name",
     },
     .{
         .name = "true",
@@ -170,8 +188,11 @@ test "getBaseName extraction" {
 }
 
 test "findApplet lookup" {
+    try std.testing.expect(findApplet("basename") != null);
+    try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
-    try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("false") != null);
+    try std.testing.expect(findApplet("pwd") != null);
+    try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("nonexistent") == null);
 }
