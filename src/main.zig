@@ -13,7 +13,8 @@ pub const commands = struct {
     pub const basename = @import("commands/basename.zig");
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
-    pub const @"false" = @import("commands/false.zig");
+    pub const false_cmd = @import("commands/false.zig");
+    pub const logname = @import("commands/logname.zig");
     pub const pwd = @import("commands/pwd.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
@@ -51,8 +52,13 @@ pub const applets = [_]Applet{
     },
     .{
         .name = "false",
-        .run = commands.@"false".run,
+        .run = commands.false_cmd.run,
         .description = "return false value",
+    },
+    .{
+        .name = "logname",
+        .run = commands.logname.run,
+        .description = "return the user's login name",
     },
     .{
         .name = "pwd",
@@ -206,6 +212,7 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
+    try std.testing.expect(findApplet("logname") != null);
     try std.testing.expect(findApplet("pwd") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);

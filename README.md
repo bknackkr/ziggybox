@@ -112,7 +112,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `locale` | [ ] |
 | `localedef` | [ ] |
 | `logger` | [ ] |
-| `logname` | [ ] |
+| `logname` | [✅] |
 | `lp` | [ ] |
 | `ls` | [ ] |
 | `m4` | [ ] |
