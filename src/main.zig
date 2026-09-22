@@ -11,6 +11,8 @@ const std = @import("std");
 
 pub const commands = struct {
     pub const basename = @import("commands/basename.zig");
+    pub const chmod = @import("commands/chmod.zig");
+    pub const chown = @import("commands/chown.zig");
     pub const cp = @import("commands/cp.zig");
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
@@ -32,6 +34,8 @@ pub const common = struct {
     pub const args = @import("common/args.zig");
     pub const error_mod = @import("common/error.zig");
     pub const io = @import("common/io.zig");
+    pub const mode = @import("common/mode.zig");
+    pub const user = @import("common/user.zig");
 };
 
 pub const Applet = struct {
@@ -46,6 +50,16 @@ pub const applets = [_]Applet{
         .name = "basename",
         .run = commands.basename.run,
         .description = "return non-directory portion of a pathname",
+    },
+    .{
+        .name = "chmod",
+        .run = commands.chmod.run,
+        .description = "change file modes",
+    },
+    .{
+        .name = "chown",
+        .run = commands.chown.run,
+        .description = "change file ownership",
     },
     .{
         .name = "cp",
@@ -251,6 +265,8 @@ test "getBaseName extraction" {
 
 test "findApplet lookup" {
     try std.testing.expect(findApplet("basename") != null);
+    try std.testing.expect(findApplet("chmod") != null);
+    try std.testing.expect(findApplet("chown") != null);
     try std.testing.expect(findApplet("cp") != null);
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
