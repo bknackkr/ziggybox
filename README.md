@@ -108,7 +108,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `id` | [ ] |
 | `join` | [ ] |
 | `kill` | [ ] |
-| `ln` | [ ] |
+| `ln` | [✅] |
 | `locale` | [ ] |
 | `localedef` | [ ] |
 | `logger` | [ ] |
@@ -137,7 +137,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `ps` | [ ] |
 | `pwd` | [✅] |
 | `read` | [ ] |
-| `readlink` | [ ] |
+| `readlink` | [✅] |
 | `realpath` | [ ] |
 | `renice` | [ ] |
 | `rm` | [ ] |

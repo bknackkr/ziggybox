@@ -14,9 +14,11 @@ pub const commands = struct {
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
     pub const false_cmd = @import("commands/false.zig");
+    pub const ln = @import("commands/ln.zig");
     pub const logname = @import("commands/logname.zig");
     pub const mkdir = @import("commands/mkdir.zig");
     pub const pwd = @import("commands/pwd.zig");
+    pub const readlink = @import("commands/readlink.zig");
     pub const rmdir = @import("commands/rmdir.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
@@ -58,6 +60,11 @@ pub const applets = [_]Applet{
         .description = "return false value",
     },
     .{
+        .name = "ln",
+        .run = commands.ln.run,
+        .description = "link files",
+    },
+    .{
         .name = "logname",
         .run = commands.logname.run,
         .description = "return the user's login name",
@@ -71,6 +78,11 @@ pub const applets = [_]Applet{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
+    },
+    .{
+        .name = "readlink",
+        .run = commands.readlink.run,
+        .description = "display the contents of a symbolic link",
     },
     .{
         .name = "rmdir",
@@ -224,9 +236,11 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
+    try std.testing.expect(findApplet("ln") != null);
     try std.testing.expect(findApplet("logname") != null);
     try std.testing.expect(findApplet("mkdir") != null);
     try std.testing.expect(findApplet("pwd") != null);
+    try std.testing.expect(findApplet("readlink") != null);
     try std.testing.expect(findApplet("rmdir") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);

@@ -29,6 +29,12 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
         error.ReadOnlyFileSystem => "Read-only file system",
         error.FileBusy => "Device or resource busy",
         error.PermissionDenied => "Permission denied",
+        error.NotLink => "Invalid argument",
+        error.CrossDevice => "Invalid cross-device link",
+        error.LinkQuotaExceeded => "Too many links",
+        error.OperationUnsupported => "Operation not supported",
+        error.DiskQuota => "Disk quota exceeded",
+        error.HardwareFailure => "Input/output error",
         else => @errorName(err),
     };
 
