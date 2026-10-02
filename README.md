@@ -22,13 +22,13 @@ ziggybox is written in Zig 0.16.0. To build, you need to install it. You can dow
 
 ```bash
 # Arch Linux
-sudo pacman -S zig
+pacman -S zig
 
 # Debian/Ubuntu
-sudo apt install zig
+apt install zig
 
 # Fedora
-sudo dnf install zig
+dnf install zig
 ```
 
 ### x86-64 and x86 (32-bit)
