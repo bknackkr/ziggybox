@@ -48,6 +48,56 @@ pub fn findGidByName(io: std.Io, groupname: []const u8) ?u32 {
     return null;
 }
 
+/// Search /etc/passwd for a UID and copy the username into `out_buf`.
+pub fn findNameByUid(io: std.Io, uid: u32, out_buf: []u8) ?[]const u8 {
+    var file = std.Io.Dir.openFileAbsolute(io, "/etc/passwd", .{}) catch return null;
+    defer file.close(io);
+
+    var file_buf: [2048]u8 = undefined;
+    var reader = file.readerStreaming(io, &file_buf);
+
+    while (reader.interface.takeDelimiter('\n') catch null) |line| {
+        var it = std.mem.splitScalar(u8, line, ':');
+        const file_username = it.next() orelse continue;
+        _ = it.next() orelse continue; // password
+        const uid_str = it.next() orelse continue;
+        const file_uid = std.fmt.parseInt(u32, uid_str, 10) catch continue;
+        if (file_uid == uid) {
+            if (file_username.len <= out_buf.len) {
+                @memcpy(out_buf[0..file_username.len], file_username);
+                return out_buf[0..file_username.len];
+            }
+            return null;
+        }
+    }
+    return null;
+}
+
+/// Search /etc/group for a GID and copy the groupname into `out_buf`.
+pub fn findNameByGid(io: std.Io, gid: u32, out_buf: []u8) ?[]const u8 {
+    var file = std.Io.Dir.openFileAbsolute(io, "/etc/group", .{}) catch return null;
+    defer file.close(io);
+
+    var file_buf: [2048]u8 = undefined;
+    var reader = file.readerStreaming(io, &file_buf);
+
+    while (reader.interface.takeDelimiter('\n') catch null) |line| {
+        var it = std.mem.splitScalar(u8, line, ':');
+        const file_groupname = it.next() orelse continue;
+        _ = it.next() orelse continue; // password
+        const gid_str = it.next() orelse continue;
+        const file_gid = std.fmt.parseInt(u32, gid_str, 10) catch continue;
+        if (file_gid == gid) {
+            if (file_groupname.len <= out_buf.len) {
+                @memcpy(out_buf[0..file_groupname.len], file_groupname);
+                return out_buf[0..file_groupname.len];
+            }
+            return null;
+        }
+    }
+    return null;
+}
+
 // ============================================================================
 // Unit Tests
 // ============================================================================
@@ -61,6 +111,10 @@ test "user: parsing test logic" {
         const root_uid = findUidByName(io, "root");
         if (root_uid) |uid| {
             try std.testing.expectEqual(@as(u32, 0), uid);
+        }
+        var buf: [64]u8 = undefined;
+        if (findNameByUid(io, 0, &buf)) |name| {
+            try std.testing.expectEqualStrings("root", name);
         }
     }
 }

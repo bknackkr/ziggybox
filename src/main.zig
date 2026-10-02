@@ -20,6 +20,7 @@ pub const commands = struct {
     pub const false_cmd = @import("commands/false.zig");
     pub const ln = @import("commands/ln.zig");
     pub const logname = @import("commands/logname.zig");
+    pub const ls = @import("commands/ls.zig");
     pub const mkdir = @import("commands/mkdir.zig");
     pub const mv = @import("commands/mv.zig");
     pub const pwd = @import("commands/pwd.zig");
@@ -96,6 +97,11 @@ pub const applets = [_]Applet{
         .name = "logname",
         .run = commands.logname.run,
         .description = "return the user's login name",
+    },
+    .{
+        .name = "ls",
+        .run = commands.ls.run,
+        .description = "list directory contents",
     },
     .{
         .name = "mkdir",
@@ -280,6 +286,7 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("false") != null);
     try std.testing.expect(findApplet("ln") != null);
     try std.testing.expect(findApplet("logname") != null);
+    try std.testing.expect(findApplet("ls") != null);
     try std.testing.expect(findApplet("mkdir") != null);
     try std.testing.expect(findApplet("mv") != null);
     try std.testing.expect(findApplet("pwd") != null);

@@ -114,7 +114,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `logger`    | ❌         |
 | `logname`   | ✅         |
 | `lp`        | ❌         |
-| `ls`        | ❌         |
+| `ls`        | ✅         |
 | `m4`        | ❌         |
 | `mailx`     | ❌         |
 | `man`       | ❌         |
