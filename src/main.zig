@@ -11,6 +11,7 @@ const std = @import("std");
 
 pub const commands = struct {
     pub const basename = @import("commands/basename.zig");
+    pub const cat = @import("commands/cat.zig");
     pub const chmod = @import("commands/chmod.zig");
     pub const chown = @import("commands/chown.zig");
     pub const cp = @import("commands/cp.zig");
@@ -50,6 +51,11 @@ pub const applets = [_]Applet{
         .name = "basename",
         .run = commands.basename.run,
         .description = "return non-directory portion of a pathname",
+    },
+    .{
+        .name = "cat",
+        .run = commands.cat.run,
+        .description = "concatenate and print files",
     },
     .{
         .name = "chmod",
@@ -265,6 +271,7 @@ test "getBaseName extraction" {
 
 test "findApplet lookup" {
     try std.testing.expect(findApplet("basename") != null);
+    try std.testing.expect(findApplet("cat") != null);
     try std.testing.expect(findApplet("chmod") != null);
     try std.testing.expect(findApplet("chown") != null);
     try std.testing.expect(findApplet("cp") != null);
