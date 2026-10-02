@@ -62,161 +62,161 @@ I believe it is important for any user of this program to be aware that a non-tr
 ### POSIX Mandatory Commands
 | Command | Complete? |
 | --- | --- |
-| `alias` | [ ] |
-| `ar` | [ ] |
-| `at` | [ ] |
-| `awk` | [ ] |
-| `basename` | [✅] |
-| `batch` | [ ] |
-| `bc` | [ ] |
-| `cat` | [ ] |
-| `cd` | [ ] |
-| `chgrp` | [ ] |
-| `chmod` | [✅] |
-| `chown` | [✅] |
-| `cksum` | [ ] |
-| `cmp` | [ ] |
-| `comm` | [ ] |
-| `command` | [ ] |
-| `cp` | [✅] |
-| `cron` | [ ] |
-| `csplit` | [ ] |
-| `cut` | [ ] |
-| `date` | [ ] |
-| `dd` | [ ] |
-| `df` | [ ] |
-| `diff` | [ ] |
-| `dirname` | [✅] |
-| `du` | [ ] |
-| `echo` | [✅] |
-| `ed` | [ ] |
-| `env` | [ ] |
-| `expand` | [ ] |
-| `expr` | [ ] |
-| `false` | [✅] |
-| `file` | [ ] |
-| `find` | [ ] |
-| `fold` | [ ] |
-| `gencat` | [ ] |
-| `getconf` | [ ] |
-| `getopts` | [ ] |
-| `gettext` | [ ] |
-| `grep` | [ ] |
-| `hash` | [ ] |
-| `head` | [ ] |
-| `iconv` | [ ] |
-| `id` | [ ] |
-| `join` | [ ] |
-| `kill` | [ ] |
-| `ln` | [✅] |
-| `locale` | [ ] |
-| `localedef` | [ ] |
-| `logger` | [ ] |
-| `logname` | [✅] |
-| `lp` | [ ] |
-| `ls` | [ ] |
-| `m4` | [ ] |
-| `mailx` | [ ] |
-| `man` | [ ] |
-| `mesg` | [ ] |
-| `mkdir` | [✅] |
-| `mkfifo` | [ ] |
-| `msgfmt` | [ ] |
-| `mv` | [✅] |
-| `newgrp` | [ ] |
-| `ngettext` | [ ] |
-| `nice` | [ ] |
-| `nohup` | [ ] |
-| `od` | [ ] |
-| `paste` | [ ] |
-| `patch` | [ ] |
-| `pathchk` | [ ] |
-| `pax` | [ ] |
-| `pr` | [ ] |
-| `printf` | [ ] |
-| `ps` | [ ] |
-| `pwd` | [✅] |
-| `read` | [ ] |
-| `readlink` | [✅] |
-| `realpath` | [ ] |
-| `renice` | [ ] |
-| `rm` | [✅] |
-| `rmdir` | [✅] |
-| `sed` | [ ] |
-| `sh` | [ ] |
-| `sleep` | [✅] |
-| `sort` | [ ] |
-| `split` | [ ] |
-| `strings` | [ ] |
-| `stty` | [ ] |
-| `tabs` | [ ] |
-| `tail` | [ ] |
-| `tee` | [ ] |
-| `test` | [ ] |
-| `time` | [ ] |
-| `timeout` | [ ] |
-| `touch` | [ ] |
-| `tput` | [ ] |
-| `tr` | [ ] |
-| `true` | [✅] |
-| `tsort` | [ ] |
-| `tty` | [ ] |
-| `umask` | [ ] |
-| `unalias` | [ ] |
-| `uname` | [✅] |
-| `unexpand` | [ ] |
-| `uniq` | [ ] |
-| `uudecode` | [ ] |
-| `uuencode` | [ ] |
-| `wait` | [ ] |
-| `wc` | [ ] |
-| `write` | [ ] |
-| `xargs` | [ ] |
+| `alias` | ❌ |
+| `ar` | ❌ |
+| `at` | ❌ |
+| `awk` | ❌ |
+| `basename` | ✅ |
+| `batch` | ❌ |
+| `bc` | ❌ |
+| `cat` | ❌ |
+| `cd` | ❌ |
+| `chgrp` | ❌ |
+| `chmod` | ✅ |
+| `chown` | ✅ |
+| `cksum` | ❌ |
+| `cmp` | ❌ |
+| `comm` | ❌ |
+| `command` | ❌ |
+| `cp` | ✅ |
+| `cron` | ❌ |
+| `csplit` | ❌ |
+| `cut` | ❌ |
+| `date` | ❌ |
+| `dd` | ❌ |
+| `df` | ❌ |
+| `diff` | ❌ |
+| `dirname` | ✅ |
+| `du` | ❌ |
+| `echo` | ✅ |
+| `ed` | ❌ |
+| `env` | ❌ |
+| `expand` | ❌ |
+| `expr` | ❌ |
+| `false` | ✅ |
+| `file` | ❌ |
+| `find` | ❌ |
+| `fold` | ❌ |
+| `gencat` | ❌ |
+| `getconf` | ❌ |
+| `getopts` | ❌ |
+| `gettext` | ❌ |
+| `grep` | ❌ |
+| `hash` | ❌ |
+| `head` | ❌ |
+| `iconv` | ❌ |
+| `id` | ❌ |
+| `join` | ❌ |
+| `kill` | ❌ |
+| `ln` | ✅ |
+| `locale` | ❌ |
+| `localedef` | ❌ |
+| `logger` | ❌ |
+| `logname` | ✅ |
+| `lp` | ❌ |
+| `ls` | ❌ |
+| `m4` | ❌ |
+| `mailx` | ❌ |
+| `man` | ❌ |
+| `mesg` | ❌ |
+| `mkdir` | ✅ |
+| `mkfifo` | ❌ |
+| `msgfmt` | ❌ |
+| `mv` | ✅ |
+| `newgrp` | ❌ |
+| `ngettext` | ❌ |
+| `nice` | ❌ |
+| `nohup` | ❌ |
+| `od` | ❌ |
+| `paste` | ❌ |
+| `patch` | ❌ |
+| `pathchk` | ❌ |
+| `pax` | ❌ |
+| `pr` | ❌ |
+| `printf` | ❌ |
+| `ps` | ❌ |
+| `pwd` | ✅ |
+| `read` | ❌ |
+| `readlink` | ✅ |
+| `realpath` | ❌ |
+| `renice` | ❌ |
+| `rm` | ✅ |
+| `rmdir` | ✅ |
+| `sed` | ❌ |
+| `sh` | ❌ |
+| `sleep` | ✅ |
+| `sort` | ❌ |
+| `split` | ❌ |
+| `strings` | ❌ |
+| `stty` | ❌ |
+| `tabs` | ❌ |
+| `tail` | ❌ |
+| `tee` | ❌ |
+| `test` | ❌ |
+| `time` | ❌ |
+| `timeout` | ❌ |
+| `touch` | ❌ |
+| `tput` | ❌ |
+| `tr` | ❌ |
+| `true` | ✅ |
+| `tsort` | ❌ |
+| `tty` | ❌ |
+| `umask` | ❌ |
+| `unalias` | ❌ |
+| `uname` | ✅ |
+| `unexpand` | ❌ |
+| `uniq` | ❌ |
+| `uudecode` | ❌ |
+| `uuencode` | ❌ |
+| `wait` | ❌ |
+| `wc` | ❌ |
+| `write` | ❌ |
+| `xargs` | ❌ |
 ### Linux Utilities
 | Command | Status |
 | --- | --- |
-| `base64` | [ ] |
-| `chroot` | [ ] |
-| `clear` | [ ] |
-| `dmesg` | [ ] |
-| `free` | [ ] |
-| `gunzip` | [ ] |
-| `gzip` | [ ] |
-| `halt` | [ ] |
-| `hexdump` | [ ] |
-| `hostname` | [ ] |
-| `install` | [ ] |
-| `losetup` | [ ] |
-| `lsblk` | [ ] |
-| `md5sum` | [ ] |
-| `mktemp` | [ ] |
-| `mount` | [ ] |
-| `nc` | [ ] |
-| `nproc` | [ ] |
-| `pgrep` | [ ] |
-| `pidof` | [ ] |
-| `ping` | [ ] |
-| `pivot_root` | [ ] |
-| `pkill` | [ ] |
-| `poweroff` | [ ] |
-| `reboot` | [ ] |
-| `sha1sum` | [ ] |
-| `sha256sum` | [ ] |
-| `sha512sum` | [ ] |
-| `stat` | [ ] |
-| `swapoff` | [ ] |
-| `swapon` | [ ] |
-| `switch_root` | [ ] |
-| `sync` | [ ] |
-| `tac` | [ ] |
-| `tar` | [ ] |
-| `truncate` | [ ] |
-| `umount` | [ ] |
-| `uptime` | [ ] |
-| `watch` | [ ] |
-| `wget` | [ ] |
-| `which` | [ ] |
-| `whoami` | [ ] |
-| `xxd` | [ ] |
-| `yes` | [ ] |
-| `zcat` | [ ] |
+| `base64` | ❌ |
+| `chroot` | ❌ |
+| `clear` | ❌ |
+| `dmesg` | ❌ |
+| `free` | ❌ |
+| `gunzip` | ❌ |
+| `gzip` | ❌ |
+| `halt` | ❌ |
+| `hexdump` | ❌ |
+| `hostname` | ❌ |
+| `install` | ❌ |
+| `losetup` | ❌ |
+| `lsblk` | ❌ |
+| `md5sum` | ❌ |
+| `mktemp` | ❌ |
+| `mount` | ❌ |
+| `nc` | ❌ |
+| `nproc` | ❌ |
+| `pgrep` | ❌ |
+| `pidof` | ❌ |
+| `ping` | ❌ |
+| `pivot_root` | ❌ |
+| `pkill` | ❌ |
+| `poweroff` | ❌ |
+| `reboot` | ❌ |
+| `sha1sum` | ❌ |
+| `sha256sum` | ❌ |
+| `sha512sum` | ❌ |
+| `stat` | ❌ |
+| `swapoff` | ❌ |
+| `swapon` | ❌ |
+| `switch_root` | ❌ |
+| `sync` | ❌ |
+| `tac` | ❌ |
+| `tar` | ❌ |
+| `truncate` | ❌ |
+| `umount` | ❌ |
+| `uptime` | ❌ |
+| `watch` | ❌ |
+| `wget` | ❌ |
+| `which` | ❌ |
+| `whoami` | ❌ |
+| `xxd` | ❌ |
+| `yes` | ❌ |
+| `zcat` | ❌ |
