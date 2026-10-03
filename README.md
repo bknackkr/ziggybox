@@ -125,7 +125,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `mv`        | ✅         |
 | `newgrp`    | ❌         |
 | `ngettext`  | ❌         |
-| `nice`      | ❌         |
+| `nice`      | ✅         |
 | `nohup`     | ❌         |
 | `od`        | ❌         |
 | `paste`     | ❌         |
@@ -139,7 +139,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `read`      | ❌         |
 | `readlink`  | ✅         |
 | `realpath`  | ❌         |
-| `renice`    | ❌         |
+| `renice`    | ✅         |
 | `rm`        | ✅         |
 | `rmdir`     | ✅         |
 | `sed`       | ❌         |
