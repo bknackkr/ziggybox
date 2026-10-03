@@ -101,7 +101,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `getconf`   | ❌         |
 | `getopts`   | ❌         |
 | `gettext`   | ❌         |
-| `grep`      | ❌         |
+| `grep`      | ✅         |
 | `hash`      | ❌         |
 | `head`      | ❌         |
 | `iconv`     | ❌         |

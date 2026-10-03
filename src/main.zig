@@ -18,6 +18,7 @@ pub const commands = struct {
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
     pub const false_cmd = @import("commands/false.zig");
+    pub const grep = @import("commands/grep.zig");
     pub const ln = @import("commands/ln.zig");
     pub const logname = @import("commands/logname.zig");
     pub const ls = @import("commands/ls.zig");
@@ -37,6 +38,7 @@ pub const common = struct {
     pub const error_mod = @import("common/error.zig");
     pub const io = @import("common/io.zig");
     pub const mode = @import("common/mode.zig");
+    pub const regex = @import("common/regex.zig");
     pub const user = @import("common/user.zig");
 };
 
@@ -87,6 +89,11 @@ pub const applets = [_]Applet{
         .name = "false",
         .run = commands.false_cmd.run,
         .description = "return false value",
+    },
+    .{
+        .name = "grep",
+        .run = commands.grep.run,
+        .description = "search a file for a pattern",
     },
     .{
         .name = "ln",
@@ -284,6 +291,7 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
+    try std.testing.expect(findApplet("grep") != null);
     try std.testing.expect(findApplet("ln") != null);
     try std.testing.expect(findApplet("logname") != null);
     try std.testing.expect(findApplet("ls") != null);
