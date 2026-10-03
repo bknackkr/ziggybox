@@ -119,6 +119,12 @@ pub const AstNode = struct {
     };
 };
 
+pub const MatchSpan = struct {
+    start: usize,
+    end: usize,
+    captures: [10]?[2]usize = [_]?[2]usize{null} ** 10,
+};
+
 pub const Regex = struct {
     mode: Mode,
     pattern: []const u8,
@@ -143,6 +149,86 @@ pub const Regex = struct {
     ast_root: ?AstNode = null,
     has_backref: bool = false,
     arena: ?std.heap.ArenaAllocator = null,
+
+    pub fn compileWithAst(
+        allocator: std.mem.Allocator,
+        pattern: []const u8,
+        mode: Mode,
+        case_insensitive: bool,
+        whole_line: bool,
+    ) ParseError!Regex {
+        if (mode == .fixed) {
+            return Regex{
+                .mode = .fixed,
+                .pattern = pattern,
+                .case_insensitive = case_insensitive,
+                .whole_line = whole_line,
+                .fixed_needle = pattern,
+            };
+        }
+
+        var arena = std.heap.ArenaAllocator.init(allocator);
+        errdefer arena.deinit();
+        const arena_allocator = arena.allocator();
+
+        var parser = Parser{
+            .pattern = pattern,
+            .mode = mode,
+            .case_insensitive = case_insensitive,
+            .whole_line = whole_line,
+            .allocator = arena_allocator,
+        };
+
+        const ast = try parser.parse();
+
+        return Regex{
+            .mode = mode,
+            .pattern = pattern,
+            .case_insensitive = case_insensitive,
+            .whole_line = whole_line,
+            .ast_root = ast,
+            .has_backref = true,
+            .is_anchored_start = parser.is_anchored_start or whole_line,
+            .is_anchored_end = parser.is_anchored_end or whole_line,
+            .arena = arena,
+        };
+    }
+
+    pub fn search(self: *const Regex, line: []const u8) ?MatchSpan {
+        if (self.mode == .fixed) {
+            const needle = self.fixed_needle;
+            if (needle.len == 0) {
+                return MatchSpan{ .start = 0, .end = 0 };
+            }
+            const idx = if (self.case_insensitive)
+                std.ascii.indexOfIgnoreCase(line, needle)
+            else
+                std.mem.indexOf(u8, line, needle);
+            if (idx) |start| {
+                return MatchSpan{ .start = start, .end = start + needle.len };
+            }
+            return null;
+        }
+
+        const root = self.ast_root orelse return null;
+        var captures: [10]?[2]usize = [_]?[2]usize{null} ** 10;
+
+        if (self.is_anchored_start) {
+            if (matchAstNode(root, line, 0, &captures, self.whole_line or self.is_anchored_end)) |end| {
+                return MatchSpan{ .start = 0, .end = end, .captures = captures };
+            }
+            return null;
+        }
+
+        var start: usize = 0;
+        while (start <= line.len) : (start += 1) {
+            @memset(&captures, null);
+            if (matchAstNode(root, line, start, &captures, self.whole_line or self.is_anchored_end)) |end| {
+                return MatchSpan{ .start = start, .end = end, .captures = captures };
+            }
+        }
+        return null;
+    }
 
     pub fn compile(
         allocator: std.mem.Allocator,
@@ -432,6 +518,116 @@ pub const Regex = struct {
     }
 };
 
+fn matchAstSeq(
+    items: []const AstNode,
+    idx: usize,
+    line: []const u8,
+    pos: usize,
+    captures: *[10]?[2]usize,
+    must_reach_end: bool,
+) ?usize {
+    if (idx >= items.len) {
+        if (!must_reach_end or pos == line.len) return pos;
+        return null;
+    }
+
+    const item = items[idx];
+    switch (item.kind) {
+        .star => |child| {
+            var match_positions: [1024]usize = undefined;
+            var num_matches: usize = 0;
+            match_positions[0] = pos;
+            num_matches = 1;
+
+            var cur = pos;
+            while (num_matches < match_positions.len) {
+                var temp_caps = captures.*;
+                if (matchAstNode(child.*, line, cur, &temp_caps, false)) |next_pos| {
+                    if (next_pos == cur) break;
+                    match_positions[num_matches] = next_pos;
+                    num_matches += 1;
+                    cur = next_pos;
+                } else break;
+            }
+
+            var i: usize = num_matches;
+            while (i > 0) {
+                i -= 1;
+                const try_pos = match_positions[i];
+                var next_caps = captures.*;
+                var re_pos = pos;
+                while (re_pos < try_pos) {
+                    re_pos = matchAstNode(child.*, line, re_pos, &next_caps, false) orelse break;
+                }
+                if (matchAstSeq(items, idx + 1, line, try_pos, &next_caps, must_reach_end)) |end| {
+                    captures.* = next_caps;
+                    return end;
+                }
+            }
+            return null;
+        },
+        .plus => |child| {
+            var match_positions: [1024]usize = undefined;
+            var num_matches: usize = 0;
+
+            var cur = pos;
+            while (num_matches < match_positions.len) {
+                var temp_caps = captures.*;
+                if (matchAstNode(child.*, line, cur, &temp_caps, false)) |next_pos| {
+                    if (next_pos == cur) break;
+                    match_positions[num_matches] = next_pos;
+                    num_matches += 1;
+                    cur = next_pos;
+                } else break;
+            }
+
+            if (num_matches == 0) return null;
+
+            var i: usize = num_matches;
+            while (i > 0) {
+                i -= 1;
+                const try_pos = match_positions[i];
+                var next_caps = captures.*;
+                var re_pos = pos;
+                while (re_pos < try_pos) {
+                    re_pos = matchAstNode(child.*, line, re_pos, &next_caps, false) orelse break;
+                }
+                if (matchAstSeq(items, idx + 1, line, try_pos, &next_caps, must_reach_end)) |end| {
+                    captures.* = next_caps;
+                    return end;
+                }
+            }
+            return null;
+        },
+        .opt => |child| {
+            var caps_copy = captures.*;
+            if (matchAstNode(child.*, line, pos, &caps_copy, false)) |next_pos| {
+                var next_caps = caps_copy;
+                if (matchAstSeq(items, idx + 1, line, next_pos, &next_caps, must_reach_end)) |end| {
+                    captures.* = next_caps;
+                    return end;
+                }
+            }
+            return matchAstSeq(items, idx + 1, line, pos, captures, must_reach_end);
+        },
+        else => {
+            const is_last = (idx + 1 == items.len);
+            var next_caps = captures.*;
+            if (matchAstNode(item, line, pos, &next_caps, is_last and must_reach_end)) |next_pos| {
+                if (is_last) {
+                    captures.* = next_caps;
+                    return next_pos;
+                }
+                if (matchAstSeq(items, idx + 1, line, next_pos, &next_caps, must_reach_end)) |end| {
+                    captures.* = next_caps;
+                    return end;
+                }
+            }
+            return null;
+        },
+    }
+}
+
 fn matchAstNode(
     node: AstNode,
     line: []const u8,
@@ -493,16 +689,7 @@ fn matchAstNode(
             return null;
         },
         .seq => |items| {
-            var cur = pos;
-            for (items, 0..) |item, idx| {
-                const is_last = (idx + 1 == items.len);
-                if (matchAstNode(item, line, cur, captures, is_last and must_reach_end)) |next_pos| {
-                    cur = next_pos;
-                } else {
-                    return null;
-                }
-            }
-            return cur;
+            return matchAstSeq(items, 0, line, pos, captures, must_reach_end);
         },
         .alt => |branches| {
             for (branches) |b| {
@@ -1156,4 +1343,24 @@ test "regex: BRE syntax and backreferences" {
     try std.testing.expect(re_backref.matches("foo-foo"));
     try std.testing.expect(re_backref.matches("bar-bar"));
     try std.testing.expect(!re_backref.matches("foo-bar"));
+}
+
+test "regex: search and capture extraction" {
+    const allocator = std.testing.allocator;
+
+    var re = try Regex.compileWithAst(allocator, "([a-z]+)=([0-9]+)", .ere, false, false);
+    defer re.deinit(allocator);
+
+    const text = "prefix key=123 suffix";
+    const res = re.search(text) orelse return error.TestExpectedMatch;
+    try std.testing.expectEqual(@as(usize, 7), res.start);
+    try std.testing.expectEqual(@as(usize, 14), res.end);
+    try std.testing.expectEqualStrings("key=123", text[res.start..res.end]);
+
+    // Check captures
+    const c1 = res.captures[1] orelse return error.TestExpectedCapture;
+    try std.testing.expectEqualStrings("key", text[c1[0]..c1[1]]);
+
+    const c2 = res.captures[2] orelse return error.TestExpectedCapture;
+    try std.testing.expectEqualStrings("123", text[c2[0]..c2[1]]);
 }

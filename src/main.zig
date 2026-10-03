@@ -10,11 +10,14 @@
 const std = @import("std");
 
 pub const commands = struct {
+    pub const awk = @import("commands/awk.zig");
     pub const basename = @import("commands/basename.zig");
     pub const cat = @import("commands/cat.zig");
     pub const chmod = @import("commands/chmod.zig");
     pub const chown = @import("commands/chown.zig");
     pub const cp = @import("commands/cp.zig");
+    pub const csplit = @import("commands/csplit.zig");
+    pub const cut = @import("commands/cut.zig");
     pub const dirname = @import("commands/dirname.zig");
     pub const echo = @import("commands/echo.zig");
     pub const false_cmd = @import("commands/false.zig");
@@ -25,11 +28,13 @@ pub const commands = struct {
     pub const mkdir = @import("commands/mkdir.zig");
     pub const mv = @import("commands/mv.zig");
     pub const nice = @import("commands/nice.zig");
+    pub const paste = @import("commands/paste.zig");
     pub const pwd = @import("commands/pwd.zig");
     pub const readlink = @import("commands/readlink.zig");
     pub const renice = @import("commands/renice.zig");
     pub const rm = @import("commands/rm.zig");
     pub const rmdir = @import("commands/rmdir.zig");
+    pub const sed = @import("commands/sed.zig");
     pub const sleep = @import("commands/sleep.zig");
     pub const @"true" = @import("commands/true.zig");
     pub const uname = @import("commands/uname.zig");
@@ -54,6 +59,11 @@ pub const Applet = struct {
 /// Registry of all currently implemented applets in ziggybox.
 pub const applets = [_]Applet{
     .{
+        .name = "awk",
+        .run = commands.awk.run,
+        .description = "pattern scanning and processing language",
+    },
+    .{
         .name = "basename",
         .run = commands.basename.run,
         .description = "return non-directory portion of a pathname",
@@ -77,6 +87,16 @@ pub const applets = [_]Applet{
         .name = "cp",
         .run = commands.cp.run,
         .description = "copy files",
+    },
+    .{
+        .name = "csplit",
+        .run = commands.csplit.run,
+        .description = "split files based on context",
+    },
+    .{
+        .name = "cut",
+        .run = commands.cut.run,
+        .description = "cut out selected fields of each line of a file",
     },
     .{
         .name = "dirname",
@@ -129,6 +149,11 @@ pub const applets = [_]Applet{
         .description = "invoke a utility with an altered nice value",
     },
     .{
+        .name = "paste",
+        .run = commands.paste.run,
+        .description = "merge corresponding or subsequent lines of files",
+    },
+    .{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
@@ -152,6 +177,11 @@ pub const applets = [_]Applet{
         .name = "rmdir",
         .run = commands.rmdir.run,
         .description = "remove directories",
+    },
+    .{
+        .name = "sed",
+        .run = commands.sed.run,
+        .description = "stream editor",
     },
     .{
         .name = "sleep",
@@ -296,11 +326,14 @@ test "getBaseName extraction" {
 }
 
 test "findApplet lookup" {
+    try std.testing.expect(findApplet("awk") != null);
     try std.testing.expect(findApplet("basename") != null);
     try std.testing.expect(findApplet("cat") != null);
     try std.testing.expect(findApplet("chmod") != null);
     try std.testing.expect(findApplet("chown") != null);
     try std.testing.expect(findApplet("cp") != null);
+    try std.testing.expect(findApplet("csplit") != null);
+    try std.testing.expect(findApplet("cut") != null);
     try std.testing.expect(findApplet("dirname") != null);
     try std.testing.expect(findApplet("echo") != null);
     try std.testing.expect(findApplet("false") != null);
@@ -311,11 +344,13 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("mkdir") != null);
     try std.testing.expect(findApplet("mv") != null);
     try std.testing.expect(findApplet("nice") != null);
+    try std.testing.expect(findApplet("paste") != null);
     try std.testing.expect(findApplet("pwd") != null);
     try std.testing.expect(findApplet("readlink") != null);
     try std.testing.expect(findApplet("renice") != null);
     try std.testing.expect(findApplet("rm") != null);
     try std.testing.expect(findApplet("rmdir") != null);
+    try std.testing.expect(findApplet("sed") != null);
     try std.testing.expect(findApplet("sleep") != null);
     try std.testing.expect(findApplet("true") != null);
     try std.testing.expect(findApplet("uname") != null);

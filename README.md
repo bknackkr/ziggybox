@@ -65,7 +65,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `alias`     | ❌         |
 | `ar`        | ❌         |
 | `at`        | ❌         |
-| `awk`       | ❌         |
+| `awk`       | ✅         |
 | `basename`  | ✅         |
 | `batch`     | ❌         |
 | `bc`        | ❌         |
@@ -80,8 +80,8 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `command`   | ❌         |
 | `cp`        | ✅         |
 | `cron`      | ❌         |
-| `csplit`    | ❌         |
-| `cut`       | ❌         |
+| `csplit`    | ✅         |
+| `cut`       | ✅         |
 | `date`      | ❌         |
 | `dd`        | ❌         |
 | `df`        | ❌         |
@@ -128,7 +128,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `nice`      | ✅         |
 | `nohup`     | ❌         |
 | `od`        | ❌         |
-| `paste`     | ❌         |
+| `paste`     | ✅         |
 | `patch`     | ❌         |
 | `pathchk`   | ❌         |
 | `pax`       | ❌         |
@@ -142,7 +142,7 @@ I believe it is important for any user of this program to be aware that a non-tr
 | `renice`    | ✅         |
 | `rm`        | ✅         |
 | `rmdir`     | ✅         |
-| `sed`       | ❌         |
+| `sed`       | ✅         |
 | `sh`        | ❌         |
 | `sleep`     | ✅         |
 | `sort`      | ❌         |
