@@ -38,6 +38,7 @@ pub fn report(cmd: []const u8, context: ?[]const u8, err: anyerror) void {
         error.BadPathName => "Invalid argument",
         error.NetworkNotFound => "No such host or network path",
         error.FileSystem => "File system error",
+        error.ProcessNotFound, error.NoSuchProcess => "No such process",
         else => @errorName(err),
     };
 

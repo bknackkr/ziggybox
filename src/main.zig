@@ -24,8 +24,10 @@ pub const commands = struct {
     pub const ls = @import("commands/ls.zig");
     pub const mkdir = @import("commands/mkdir.zig");
     pub const mv = @import("commands/mv.zig");
+    pub const nice = @import("commands/nice.zig");
     pub const pwd = @import("commands/pwd.zig");
     pub const readlink = @import("commands/readlink.zig");
+    pub const renice = @import("commands/renice.zig");
     pub const rm = @import("commands/rm.zig");
     pub const rmdir = @import("commands/rmdir.zig");
     pub const sleep = @import("commands/sleep.zig");
@@ -38,6 +40,7 @@ pub const common = struct {
     pub const error_mod = @import("common/error.zig");
     pub const io = @import("common/io.zig");
     pub const mode = @import("common/mode.zig");
+    pub const priority = @import("common/priority.zig");
     pub const regex = @import("common/regex.zig");
     pub const user = @import("common/user.zig");
 };
@@ -121,6 +124,11 @@ pub const applets = [_]Applet{
         .description = "move files",
     },
     .{
+        .name = "nice",
+        .run = commands.nice.run,
+        .description = "invoke a utility with an altered nice value",
+    },
+    .{
         .name = "pwd",
         .run = commands.pwd.run,
         .description = "return working directory name",
@@ -129,6 +137,11 @@ pub const applets = [_]Applet{
         .name = "readlink",
         .run = commands.readlink.run,
         .description = "display the contents of a symbolic link",
+    },
+    .{
+        .name = "renice",
+        .run = commands.renice.run,
+        .description = "set nice values of running processes",
     },
     .{
         .name = "rm",
@@ -297,8 +310,10 @@ test "findApplet lookup" {
     try std.testing.expect(findApplet("ls") != null);
     try std.testing.expect(findApplet("mkdir") != null);
     try std.testing.expect(findApplet("mv") != null);
+    try std.testing.expect(findApplet("nice") != null);
     try std.testing.expect(findApplet("pwd") != null);
     try std.testing.expect(findApplet("readlink") != null);
+    try std.testing.expect(findApplet("renice") != null);
     try std.testing.expect(findApplet("rm") != null);
     try std.testing.expect(findApplet("rmdir") != null);
     try std.testing.expect(findApplet("sleep") != null);
